@@ -3,7 +3,6 @@ package br.edu.ifsp.memora_app.domain.deck
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(
     tableName = "cards",
@@ -19,5 +18,6 @@ import java.util.UUID
 data class Card(
     @PrimaryKey val id: String,
     val difficulty: Int,
+    val index: Int,
     val deckId: String
 )
