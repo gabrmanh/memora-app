@@ -30,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswerDao
     abstract fun studySessionDao(): StudySessionDao
     abstract fun userDao(): UserDao
+    abstract fun cardProgressDao(): CardProgressDao
 
     companion object {
         @Volatile

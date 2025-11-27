@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Badge
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +41,7 @@ fun DeckItem(deckWithStatus: DeckWithStatus, onClick: () -> Unit) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar/Icon
+            // Avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -60,27 +61,39 @@ fun DeckItem(deckWithStatus: DeckWithStatus, onClick: () -> Unit) {
             Spacer(modifier = Modifier.width(16.dp))
 
             // Deck info
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = deckWithStatus.deck.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = getStatusText(deckWithStatus.status),
+                    text = getStatusText(deckWithStatus),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+
+            if (deckWithStatus.pendingCount > 0) {
+                Badge(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Text(
+                        text = deckWithStatus.pendingCount.toString(),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
         }
     }
 }
 
-fun getStatusText(status: DeckStatus): String {
-    return when (status) {
-        DeckStatus.PENDING -> "Review pending"
-        DeckStatus.WAITING -> "Waiting"
-        DeckStatus.NEW -> "New deck"
-        DeckStatus.FINISHED -> "Completed"
+fun getStatusText(deckWithStatus: DeckWithStatus): String {
+    return when (deckWithStatus.status) {
+        DeckStatus.PENDING -> "${deckWithStatus.pendingCount} due now"
+        DeckStatus.WAITING -> "${deckWithStatus.totalCards} cards learning"
+        DeckStatus.NEW -> "${deckWithStatus.totalCards} new cards"
+        DeckStatus.FINISHED -> "All ${deckWithStatus.totalCards} mastered!"
     }
 }
+
