@@ -16,9 +16,10 @@ import br.edu.ifsp.memora_app.data.local.dao.*
         FieldValue::class,
         Answer::class,
         StudySession::class,
-        User::class
+        User::class,
+        CardProgress::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
