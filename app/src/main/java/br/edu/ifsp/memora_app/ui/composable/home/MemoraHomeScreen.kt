@@ -12,13 +12,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.memora_app.data.local.AppDatabase
 import br.edu.ifsp.memora_app.data.local.repository.DeckRepository
-import br.edu.ifsp.memora_app.ui.composable.MemoraBottomNav
-import br.edu.ifsp.memora_app.ui.composable.MemoraTopBar
 import br.edu.ifsp.memora_app.ui.viewmodel.DeckViewModel
 import br.edu.ifsp.memora_app.ui.viewmodel.DeckViewModelFactory
 
 @Composable
-fun MemoraHomeScreen() {
+fun MemoraHomeScreen(
+    onNavigateToDeckEditor: (String?) -> Unit
+) {
     val context = LocalContext.current
     val database = remember { AppDatabase.getInstance(context) }
     val repository = remember {
@@ -31,13 +31,17 @@ fun MemoraHomeScreen() {
     val decksWithStatus by viewModel.decksWithStatus.collectAsState()
 
     Scaffold(
-        topBar = { MemoraTopBar() },
-        bottomBar = { MemoraBottomNav(selectedItem = "home", onItemSelected = { }) }
+        topBar = {
+            MemoraTopBar(onCreateDeck = { onNavigateToDeckEditor(null) })
+        },
+        bottomBar = {
+            MemoraBottomNav(selectedItem = "home", onItemSelected = { })
+        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             DeckListContent(
                 decks = decksWithStatus,
-                onDeckClick = { deck -> /* Navigate to study session */ }
+                onDeckClick = { deck -> onNavigateToDeckEditor(deck.id) }
             )
         }
     }

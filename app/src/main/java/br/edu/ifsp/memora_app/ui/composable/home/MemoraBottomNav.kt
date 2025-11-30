@@ -1,4 +1,4 @@
-package br.edu.ifsp.memora_app.ui.composable
+package br.edu.ifsp.memora_app.ui.composable.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home

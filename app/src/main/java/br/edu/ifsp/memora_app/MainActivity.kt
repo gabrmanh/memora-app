@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.memora_app.data.local.AppDatabase
+import br.edu.ifsp.memora_app.ui.composable.MemoraNavigation
 import br.edu.ifsp.memora_app.ui.composable.auth.AuthScreen
 import br.edu.ifsp.memora_app.ui.composable.home.MemoraHomeScreen
 import br.edu.ifsp.memora_app.ui.config.SessionManager
@@ -43,7 +44,7 @@ fun MemoraApp() {
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
     if (isLoggedIn) {
-        MemoraHomeScreen()
+        MemoraNavigation()
     } else {
         AuthScreen(viewModel = authViewModel)
     }
