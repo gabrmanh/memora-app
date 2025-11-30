@@ -2,6 +2,8 @@ package br.edu.ifsp.memora_app.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import br.edu.ifsp.memora_app.data.local.dao.DeckDao
+import br.edu.ifsp.memora_app.data.local.dao.FieldDao
 import br.edu.ifsp.memora_app.data.local.dao.UserDao
 import br.edu.ifsp.memora_app.data.local.repository.DeckRepository
 
@@ -29,3 +31,28 @@ class AuthViewModelFactory(
     }
 }
 
+class DeckEditorViewModelFactory(
+    private val deckDao: DeckDao,
+    private val deckId: String?
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(DeckEditorViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return DeckEditorViewModel(deckDao, deckId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class FieldsEditorViewModelFactory(
+    private val fieldDao: FieldDao,
+    private val deckId: String
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(FieldsEditorViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return FieldsEditorViewModel(fieldDao, deckId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

@@ -76,8 +76,6 @@ class AuthViewModel(
     }
 }
 
-
-
 sealed class AuthUiState {
     data object Idle : AuthUiState()
     data object Loading : AuthUiState()
