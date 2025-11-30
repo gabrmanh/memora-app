@@ -2,6 +2,7 @@ package br.edu.ifsp.memora_app.data.local.dao
 
 import androidx.room.*
 import br.edu.ifsp.memora_app.domain.deck.Field
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FieldDao {
@@ -21,6 +22,6 @@ interface FieldDao {
     @Query("SELECT * FROM fields WHERE id = :fieldId")
     suspend fun getById(fieldId: String): Field?
 
-    @Query("SELECT * FROM fields WHERE deckId = :deckId")
-    suspend fun getFieldsForDeck(deckId: String): List<Field>
+    @Query("SELECT * FROM fields WHERE deckId = :deckId ORDER BY name ASC")
+    fun getFieldsForDeck(deckId: String): Flow<List<Field>>
 }
