@@ -17,7 +17,6 @@ import androidx.room.PrimaryKey
 )
 data class Card(
     @PrimaryKey val id: String,
-    val difficulty: Int,
     val index: Int,
     val deckId: String
 )
