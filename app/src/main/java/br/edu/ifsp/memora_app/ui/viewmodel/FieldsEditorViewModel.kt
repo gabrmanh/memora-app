@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.edu.ifsp.memora_app.data.local.dao.FieldDao
 import br.edu.ifsp.memora_app.domain.deck.Field
+import br.edu.ifsp.memora_app.domain.deck.FieldRole
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,13 +23,13 @@ class FieldsEditorViewModel(
             initialValue = emptyList()
         )
 
-    fun addField(name: String) {
+    fun addField(name: String, role: FieldRole) {
         viewModelScope.launch {
             val field = Field(
                 id = UUID.randomUUID().toString(),
                 name = name,
-                type = "TEXT",
-                deckId = deckId
+                deckId = deckId,
+                role = role
             )
             fieldDao.insert(field)
         }
@@ -46,3 +47,4 @@ class FieldsEditorViewModel(
         }
     }
 }
+

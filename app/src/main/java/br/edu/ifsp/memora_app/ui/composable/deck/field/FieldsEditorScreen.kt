@@ -65,7 +65,7 @@ fun FieldsEditorScreen(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(bottom = 32.dp)  // Add bottom padding
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(fields) { field ->
                 FieldItem(
@@ -99,7 +99,7 @@ fun FieldsEditorScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .padding(bottom = 32.dp)  // Extra bottom padding
+                .padding(bottom = 16.dp)
                 .height(50.dp)
         ) {
             Icon(
@@ -118,11 +118,11 @@ fun FieldsEditorScreen(
                 showAddDialog = false
                 editingField = null
             },
-            onSave = { name ->
+            onSave = { name, role ->
                 if (editingField != null) {
-                    viewModel.updateField(editingField!!.copy(name = name))
+                    viewModel.updateField(editingField!!.copy(name = name, role = role))
                 } else {
-                    viewModel.addField(name)
+                    viewModel.addField(name, role)
                 }
                 showAddDialog = false
                 editingField = null
@@ -130,4 +130,3 @@ fun FieldsEditorScreen(
         )
     }
 }
-
