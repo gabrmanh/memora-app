@@ -1,4 +1,4 @@
-package br.edu.ifsp.memora_app.ui.composable.deck.field
+package br.edu.ifsp.memora_app.ui.composable.deck.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,35 +21,38 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.memora_app.data.local.AppDatabase
-import br.edu.ifsp.memora_app.domain.deck.Field
 import br.edu.ifsp.memora_app.ui.composable.deck.DeckEditorTopBar
-import br.edu.ifsp.memora_app.ui.viewmodel.FieldsEditorViewModel
-import br.edu.ifsp.memora_app.ui.viewmodel.FieldsEditorViewModelFactory
+import br.edu.ifsp.memora_app.ui.viewmodel.CardsEditorViewModel
+import br.edu.ifsp.memora_app.ui.viewmodel.CardsEditorViewModelFactory
+
 
 @Composable
-fun FieldsEditorScreen(
+fun CardsEditorScreen(
     deckId: String,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onEditCard: (String) -> Unit
 ) {
     val context = LocalContext.current
     val database = remember { AppDatabase.getInstance(context) }
-    val viewModel: FieldsEditorViewModel = viewModel(
-        key = "fields_$deckId",
-        factory = FieldsEditorViewModelFactory(database.fieldDao(), deckId)
+    val viewModel: CardsEditorViewModel = viewModel(
+        key = "cards_$deckId",
+        factory = CardsEditorViewModelFactory(
+            database.cardDao(),
+            database.fieldDao(),
+            database.fieldValueDao(),
+            deckId
+        )
     )
 
+    val cards by viewModel.cards.collectAsState()
     val fields by viewModel.fields.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
-    var editingField by remember { mutableStateOf<Field?>(null) }
 
     Column(
         modifier = Modifier
@@ -57,7 +60,7 @@ fun FieldsEditorScreen(
             .background(MaterialTheme.colorScheme.surface)
     ) {
         DeckEditorTopBar(
-            title = "Edit Fields",
+            title = "Cards (${cards.size})",
             onNavigateBack = onNavigateBack
         )
 
@@ -65,18 +68,20 @@ fun FieldsEditorScreen(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(bottom = 32.dp)  // Add bottom padding
+            contentPadding = PaddingValues(bottom = 32.dp)
         ) {
-            items(fields) { field ->
-                FieldItem(
-                    field = field,
-                    onEdit = { editingField = field },
-                    onDelete = { viewModel.deleteField(field) }
+            items(cards) { card ->
+                CardItem(
+                    card = card,
+                    fields = fields,
+                    viewModel = viewModel,
+                    onEdit = { onEditCard(card.id) },
+                    onDelete = { viewModel.deleteCard(card) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            if (fields.isEmpty()) {
+            if (cards.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -85,7 +90,7 @@ fun FieldsEditorScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No fields yet. Add one to get started!",
+                            text = "No cards yet. Add one to get started!",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -95,7 +100,7 @@ fun FieldsEditorScreen(
         }
 
         Button(
-            onClick = { showAddDialog = true },
+            onClick = { viewModel.addCard() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -104,30 +109,10 @@ fun FieldsEditorScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Field"
+                contentDescription = "Add Card"
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Add Field")
+            Text("Add Card")
         }
     }
-
-    if (showAddDialog || editingField != null) {
-        FieldDialog(
-            field = editingField,
-            onDismiss = {
-                showAddDialog = false
-                editingField = null
-            },
-            onSave = { name ->
-                if (editingField != null) {
-                    viewModel.updateField(editingField!!.copy(name = name))
-                } else {
-                    viewModel.addField(name)
-                }
-                showAddDialog = false
-                editingField = null
-            }
-        )
-    }
 }
-

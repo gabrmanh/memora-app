@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import br.edu.ifsp.memora_app.ui.composable.deck.DeckEditorScreen
+import br.edu.ifsp.memora_app.ui.composable.deck.card.CardEditScreen
+import br.edu.ifsp.memora_app.ui.composable.deck.card.CardsEditorScreen
 import br.edu.ifsp.memora_app.ui.composable.deck.field.FieldsEditorScreen
 import br.edu.ifsp.memora_app.ui.composable.home.MemoraHomeScreen
 
@@ -28,7 +30,7 @@ fun MemoraNavigation() {
                     currentScreen = Screen.Home
                 },
                 onNavigateToCards = { deckId ->
-                    // TODO: Navigate to cards screen
+                    currentScreen = Screen.CardsEditor(deckId)
                 },
                 onNavigateToFields = { deckId ->
                     currentScreen = Screen.FieldsEditor(deckId)
@@ -43,15 +45,33 @@ fun MemoraNavigation() {
                 }
             )
         }
-
+        is Screen.CardsEditor -> {
+            CardsEditorScreen(
+                deckId = screen.deckId,
+                onNavigateBack = {
+                    currentScreen = Screen.DeckEditor(screen.deckId)
+                },
+                onEditCard = { cardId ->
+                    currentScreen = Screen.CardEdit(cardId, screen.deckId)
+                }
+            )
+        }
+        is Screen.CardEdit -> {
+            CardEditScreen(
+                cardId = screen.cardId,
+                deckId = screen.deckId,
+                onNavigateBack = {
+                    currentScreen = Screen.CardsEditor(screen.deckId)
+                }
+            )
+        }
     }
 }
 
 sealed class Screen {
-    object Home : Screen()
+    data object Home : Screen()
     data class DeckEditor(val deckId: String?) : Screen()
     data class FieldsEditor(val deckId: String) : Screen()
-    // Add more screens as needed
-    // data class Cards(val deckId: String) : Screen()
-    // data class Fields(val deckId: String) : Screen()
+    data class CardsEditor(val deckId: String) : Screen()
+    data class CardEdit(val cardId: String, val deckId: String) : Screen()
 }
