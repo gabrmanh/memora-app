@@ -17,7 +17,8 @@ import br.edu.ifsp.memora_app.ui.viewmodel.DeckViewModelFactory
 
 @Composable
 fun MemoraHomeScreen(
-    onNavigateToDeckEditor: (String?) -> Unit
+    onNavigateToDeckEditor: (String?) -> Unit,
+    onNavigateToStudyStart: (String) -> Unit
 ) {
     val context = LocalContext.current
     val database = remember { AppDatabase.getInstance(context) }
@@ -41,8 +42,10 @@ fun MemoraHomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             DeckListContent(
                 decks = decksWithStatus,
-                onDeckClick = { deck -> onNavigateToDeckEditor(deck.id) }
+                onDeckClick = { deck -> onNavigateToStudyStart(deck.id) },
+                onDeckLongClick = { deck -> onNavigateToDeckEditor(deck.id) }
             )
         }
+
     }
 }

@@ -99,7 +99,7 @@ fun FieldsEditorScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .padding(bottom = 16.dp)
+                .padding(bottom = 32.dp)
                 .height(50.dp)
         ) {
             Icon(

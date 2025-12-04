@@ -1,7 +1,9 @@
 package br.edu.ifsp.memora_app.ui.composable.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,13 +27,21 @@ import androidx.compose.ui.unit.dp
 import br.edu.ifsp.memora_app.data.local.dto.DeckStatus
 import br.edu.ifsp.memora_app.data.local.dto.DeckWithStatus
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DeckItem(deckWithStatus: DeckWithStatus, onClick: () -> Unit) {
+fun DeckItem(
+    deckWithStatus: DeckWithStatus,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .clickable { onClick() },
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -41,7 +51,6 @@ fun DeckItem(deckWithStatus: DeckWithStatus, onClick: () -> Unit) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Avatar
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -60,7 +69,6 @@ fun DeckItem(deckWithStatus: DeckWithStatus, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Deck info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = deckWithStatus.deck.name,

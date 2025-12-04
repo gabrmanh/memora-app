@@ -10,12 +10,14 @@ import br.edu.ifsp.memora_app.data.local.dto.DeckWithStatus
 import br.edu.ifsp.memora_app.domain.deck.Deck
 
 @Composable
-fun DeckListContent(decks: List<DeckWithStatus>, onDeckClick: (Deck) -> Unit) {
+fun DeckListContent(
+    decks: List<DeckWithStatus>,
+    onDeckClick: (Deck) -> Unit,
+    onDeckLongClick: (Deck) -> Unit
+) {
     val groupedDecks = decks.groupBy { it.status }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         DeckStatus.entries.forEach { status ->
             val decksForStatus = groupedDecks[status] ?: emptyList()
 
@@ -27,7 +29,8 @@ fun DeckListContent(decks: List<DeckWithStatus>, onDeckClick: (Deck) -> Unit) {
                 items(decksForStatus) { deckWithStatus ->
                     DeckItem(
                         deckWithStatus = deckWithStatus,
-                        onClick = { onDeckClick(deckWithStatus.deck) }
+                        onClick = { onDeckClick(deckWithStatus.deck) },
+                        onLongClick = { onDeckLongClick(deckWithStatus.deck) }
                     )
                 }
             }

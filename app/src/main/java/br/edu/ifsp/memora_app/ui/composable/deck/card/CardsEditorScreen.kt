@@ -47,6 +47,7 @@ fun CardsEditorScreen(
             database.cardDao(),
             database.fieldDao(),
             database.fieldValueDao(),
+            database.cardProgressDao(),
             deckId
         )
     )

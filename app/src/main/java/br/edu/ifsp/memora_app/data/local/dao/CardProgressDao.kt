@@ -17,6 +17,17 @@ interface CardProgressDao {
         AND cardId IN (SELECT c.id FROM cards c WHERE deckId = :deckId)""")
     fun getCardProgressForDeck(userId: String, deckId: String): Flow<List<CardProgress>>
 
+
+    @Query("""
+        SELECT cp.* FROM card_progress cp
+        INNER JOIN cards c ON c.id = cp.cardId
+        WHERE cp.userId = :userId AND c.deckId = :deckId
+    """)
+    fun getAllProgressForDeck(userId: String, deckId: String): Flow<List<CardProgress>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(progress: CardProgress)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(progress: CardProgress)
 }

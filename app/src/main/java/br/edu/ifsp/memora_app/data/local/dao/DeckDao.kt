@@ -37,6 +37,9 @@ interface DeckDao {
         GROUP BY d.id
     """)
     fun getDecksWithStats(userId: String, currentTime: Long): Flow<List<DeckStats>>
+
+    @Query("SELECT * FROM decks WHERE id = :deckId")
+    fun getDeckByIdFlow(deckId: String): Flow<Deck?>
 }
 
 data class DeckStats(

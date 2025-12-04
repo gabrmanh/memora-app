@@ -3,6 +3,7 @@ package br.edu.ifsp.memora_app.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import br.edu.ifsp.memora_app.data.local.dao.CardDao
+import br.edu.ifsp.memora_app.data.local.dao.CardProgressDao
 import br.edu.ifsp.memora_app.data.local.dao.DeckDao
 import br.edu.ifsp.memora_app.data.local.dao.FieldDao
 import br.edu.ifsp.memora_app.data.local.dao.FieldValueDao
@@ -63,12 +64,13 @@ class CardsEditorViewModelFactory(
     private val cardDao: CardDao,
     private val fieldDao: FieldDao,
     private val fieldValueDao: FieldValueDao,
+    private val cardProgressDao: CardProgressDao,
     private val deckId: String
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CardsEditorViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CardsEditorViewModel(cardDao, fieldDao, fieldValueDao, deckId) as T
+            return CardsEditorViewModel(cardDao, fieldDao, fieldValueDao, cardProgressDao, deckId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -85,6 +87,20 @@ class CardEditViewModelFactory(
         if (modelClass.isAssignableFrom(CardEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return CardEditViewModel(cardDao, fieldDao, fieldValueDao, cardId, deckId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
+class StudySessionStartViewModelFactory(
+    private val deckDao: DeckDao,
+    private val cardProgressDao: CardProgressDao,
+    private val deckId: String
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(StudySessionStartViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return StudySessionStartViewModel(deckDao, cardProgressDao, deckId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

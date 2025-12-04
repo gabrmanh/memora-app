@@ -32,6 +32,7 @@ import br.edu.ifsp.memora_app.ui.viewmodel.DeckEditorViewModelFactory
 @Composable
 fun DeckEditorScreen(
     deckId: String? = null,
+    creationCounter: Int = 0,  // Add counter parameter
     onNavigateBack: () -> Unit,
     onNavigateToCards: (String) -> Unit,
     onNavigateToFields: (String) -> Unit
@@ -39,9 +40,14 @@ fun DeckEditorScreen(
     val context = LocalContext.current
     val database = remember { AppDatabase.getInstance(context) }
     val viewModel: DeckEditorViewModel = viewModel(
-        key = "deck_${deckId ?: "new"}",
+        key = if (deckId != null) {
+            "deck_$deckId"
+        } else {
+            "deck_new_$creationCounter"  // Unique key for each new deck
+        },
         factory = DeckEditorViewModelFactory(database.deckDao(), deckId)
     )
+
     val deckName by viewModel.deckName.collectAsState()
     val deckDescription by viewModel.deckDescription.collectAsState()
     val currentDeckId by viewModel.currentDeckId.collectAsState()
@@ -120,4 +126,3 @@ fun DeckEditorScreen(
         }
     }
 }
-
