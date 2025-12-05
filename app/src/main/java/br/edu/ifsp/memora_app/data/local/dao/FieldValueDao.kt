@@ -32,5 +32,8 @@ interface FieldValueDao {
     suspend fun getValuesForField(fieldId: String): List<FieldValue>
 
     @Query("SELECT * FROM field_values WHERE cardId = :cardId")
+    suspend fun getFieldValuesForCardSync(cardId: String): List<FieldValue>
+
+    @Query("SELECT * FROM field_values WHERE cardId = :cardId")
     fun getFieldValuesForCard(cardId: String): Flow<List<FieldValue>>
 }

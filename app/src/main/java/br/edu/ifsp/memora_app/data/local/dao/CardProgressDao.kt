@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import br.edu.ifsp.memora_app.domain.deck.CardProgress
 import kotlinx.coroutines.flow.Flow
 
@@ -30,4 +31,7 @@ interface CardProgressDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(progress: CardProgress)
+
+    @Update
+    suspend fun update(cardProgress: CardProgress)
 }

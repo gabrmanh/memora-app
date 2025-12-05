@@ -24,4 +24,7 @@ interface FieldDao {
 
     @Query("SELECT * FROM fields WHERE deckId = :deckId ORDER BY name ASC")
     fun getFieldsForDeck(deckId: String): Flow<List<Field>>
+
+    @Query("SELECT * FROM fields WHERE deckId = :deckId")
+    suspend fun getFieldsForDeckSync(deckId: String): List<Field>
 }

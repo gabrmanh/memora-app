@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.tooling.preview.Preview
 import br.edu.ifsp.memora_app.ui.composable.deck.DeckEditorScreen
 import br.edu.ifsp.memora_app.ui.composable.deck.card.CardEditScreen
 import br.edu.ifsp.memora_app.ui.composable.deck.card.CardsEditorScreen
 import br.edu.ifsp.memora_app.ui.composable.deck.field.FieldsEditorScreen
 import br.edu.ifsp.memora_app.ui.composable.home.MemoraHomeScreen
+import br.edu.ifsp.memora_app.ui.composable.study_session.StudySessionScreen
 import br.edu.ifsp.memora_app.ui.composable.study_session.StudySessionStartScreen
 
 @Composable
@@ -81,8 +81,14 @@ fun MemoraNavigation() {
                 deckId = screen.deckId,
                 onNavigateBack = { currentScreen = Screen.Home },
                 onStartStudy = {
-                    // TODO: Navigate to study session
+                    currentScreen = Screen.StudySession(screen.deckId)
                 }
+            )
+        }
+        is Screen.StudySession -> {
+            StudySessionScreen(
+                deckId = screen.deckId,
+                onNavigateBack = { currentScreen = Screen.Home }
             )
         }
     }
@@ -95,4 +101,5 @@ sealed class Screen {
     data class CardsEditor(val deckId: String) : Screen()
     data class CardEdit(val cardId: String, val deckId: String) : Screen()
     data class StudySessionStart(val deckId: String) : Screen()
+    data class StudySession(val deckId: String) : Screen()
 }

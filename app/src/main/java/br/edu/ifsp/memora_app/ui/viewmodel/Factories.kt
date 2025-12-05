@@ -105,3 +105,19 @@ class StudySessionStartViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+class StudySessionViewModelFactory(
+    private val cardDao: CardDao,
+    private val cardProgressDao: CardProgressDao,
+    private val fieldDao: FieldDao,
+    private val fieldValueDao: FieldValueDao,
+    private val deckId: String
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(StudySessionViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return StudySessionViewModel(cardDao, cardProgressDao, fieldDao, fieldValueDao, deckId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

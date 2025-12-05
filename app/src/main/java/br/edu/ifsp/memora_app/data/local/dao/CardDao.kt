@@ -21,4 +21,7 @@ interface CardDao {
 
     @Query("SELECT * FROM cards WHERE deckId = :deckId ORDER BY `index` ASC")
     suspend fun getCardsForDeckSync(deckId: String): List<Card>
+
+    @Query("SELECT * FROM cards WHERE id = :cardId")
+    suspend fun getCardById(cardId: String): Card?
 }
